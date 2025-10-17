@@ -5,17 +5,16 @@ import librosa
 
 usrp = uhd.usrp.MultiUSRP()
 sr = 0.2e6
-tuning_freq = 853.7e6
-samples = usrp.recv_num_samps(1000000, tuning_freq, sr, [0], 40)
+tuning_freq = 145.95e6
+samples = usrp.recv_num_samps(1000000, tuning_freq, sr, [0], 0)
 iq_signal = np.asanyarray(samples).flatten()
 
-amin = 1e-10
 n_fft = 5096
 freqs, times, mags = librosa.reassigned_spectrogram(y=np.real(iq_signal),
                                                     sr=sr,
                                                     n_fft=n_fft)
 mags_db = librosa.amplitude_to_db(mags, ref=np.max)
-fig, ax = plt.subplots(nrows=2, sharex=True, sharey=True, figsize=(8,8))
+fig, ax = plt.subplots(nrows=2, sharex=True, sharey=True, figsize=(10,8))
 img = librosa.display.specshow(mags_db, x_axis="s", y_axis="linear", sr=sr,
                          hop_length=n_fft//4, ax=ax[0])
 ax[0].set(title="Spectrogram", xlabel=None)
